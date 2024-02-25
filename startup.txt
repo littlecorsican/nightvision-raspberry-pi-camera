@@ -1,0 +1,49 @@
+Method 2: .bashrc
+
+The second method to run a program on your Raspberry Pi at startup is to modify the .bashrc  file. With the .bashrc method, your python program will run when you log in (which happens automatically when you boot up and go directly to the desktop) and also every time when a new terminal is opened, or when a new SSH connection is made. Put your command at the bottom of ‘/home/pi/.bashrc’. The program can be aborted with ‘ctrl-c’ while it is running!
+
+sudo nano /home/pi/.bashrc
+Go to the last line of the script and add:
+
+echo Running at boot 
+sudo python /home/pi/sample.py
+The echo statement above is used to show that the commands in .bashrc file are executed on bootup as well as connecting to bash console.
+
+
+https://www.dexterindustries.com/howto/run-a-program-on-your-raspberry-pi-at-startup/
+
+
+
+
+
+
+
+
+
+
+
+
+Here's how to run a python script in the background at startup.
+Thu Feb 16, 2023 12:17 am
+
+It took me days to figure out how to launch a background python script at startup that handles audio. Here's how it's done in Buster. (Possibly other versions, too.)
+
+Open raspi-config.
+Code: Select all
+
+sudo raspi-config
+Under System, click "Boot / Auto-Login" and then set the console to automatically log in your user. Save, but don't restart yet. (Don't worry. You still need to log in manually on SSH.)
+
+Now, you need to add data to the end of .bashrc to launch your program. Please note that the reason why we're using the user's account instead of /etc/rc.local, is because rc.local is run by the system at startup, and even if you put it in its own process, it won't run your audio for you. (FYI, I use VLC with PulseAudio in my Python script.)
+Code: Select all
+
+nano ~/.bashrc
+At the bottom, add:
+Code: Select all
+
+python3 /full/path/to/myscript.py
+Now you can restart and do whatever you need to to cause it to play audio.
+
+CAVEAT: There is one small caveat, though. If you log in with SSH using the account running your script, it could interrupt the script. You just close it out with ctrl+C as usual, and on restart it'll start again. You can of course run the script manually if you're debugging it or something.
+
+https://forums.raspberrypi.com/viewtopic.php?t=347485
